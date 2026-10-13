@@ -88,4 +88,4 @@ pattern-matching, not learning, and the next milestone should be harder.
 
 | Date | Hrs | Closed | What surprised me |
 |---|---|---|---|
-| | | | |
+|14/10 |  | KAI-002 | docker-compose actually looks for .env file automatically so you can pass in variables as ${VAR}, aka Variable Substitution, done before the containers are created, on my host machine. Passing env_file actually gives the env file to the container's OS process so the app inside can read it.<br/>App should wait for DB connection success before accepting requests.<br/>Graceful shutdown is designed for intentional shutdown only. In case of errors, exit with code 1 to prevent further errors or hanging|
