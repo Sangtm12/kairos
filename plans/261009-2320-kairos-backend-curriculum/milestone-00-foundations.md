@@ -45,10 +45,10 @@ one command. The healthcheck matters more than it looks: without it, your app ra
 startup and fails intermittently, which is a genuinely confusing first bug.
 
 **Done when:**
-- [ ] `docker compose up -d` starts Postgres with a persistent volume
-- [ ] Data survives `docker compose down && up` (and is destroyed by `down -v` — know the difference)
-- [ ] App logs the server time on boot
-- [ ] Connection details come from env vars, not literals
+- [x] `docker compose up -d` starts Postgres with a persistent volume
+- [x] Data survives `docker compose down && up` (and is destroyed by `down -v` — know the difference)
+- [x] App logs the server time on boot
+- [x] Connection details come from env vars, not literals
 
 **The trap:** running `docker compose down -v` out of habit and wondering where your seed data went.
 
