@@ -1,8 +1,9 @@
 import express from 'express';
 import { pool } from './config/db.js';
+import { config } from './config/env.js';
 
 const app = express();
-const port = Number(process.env.PORT ?? 3000);
+const port = config.port;
 
 // Registered at module scope, not inside startServer: a throw during startup —
 // before the database is even reached — must still be logged rather than vanish.
