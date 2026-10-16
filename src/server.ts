@@ -1,5 +1,5 @@
 import express from 'express';
-import { pool } from './config/db.js';
+import { pool } from './db/db.js';
 import { config } from './config/env.js';
 
 const app = express();

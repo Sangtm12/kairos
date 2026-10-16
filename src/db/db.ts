@@ -1,5 +1,5 @@
 import { Pool } from 'pg';
-import { config } from './env.js';
+import { config } from '../config/env.js';
 
 const pool = new Pool({
   host: config.dbHost,
