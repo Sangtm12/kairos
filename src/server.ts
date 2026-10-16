@@ -1,8 +1,7 @@
-import express from 'express';
-import { pool } from './db/db.js';
+import { pool } from './db/client.js';
 import { config } from './config/env.js';
+import { app } from './app.js';
 
-const app = express();
 const port = config.port;
 
 // Registered at module scope, not inside startServer: a throw during startup —
@@ -18,24 +17,6 @@ process.on('unhandledRejection', (reason, promise) => {
     reason,
   });
   process.exit(1);
-});
-
-app.use(express.json());
-
-app.get('/health', async (_req, res) => {
-  try {
-    await pool.query('SELECT 1');
-    res.status(200).json({
-      status: 'ok',
-      database: 'connected',
-    });
-  } catch (err) {
-    console.error('Health check failed: ', err);
-    res.status(500).json({
-      status: 'error',
-      database: 'not connected',
-    });
-  }
 });
 
 // Docker sends SIGKILL 10s after SIGTERM, so cap our own attempt below that.
