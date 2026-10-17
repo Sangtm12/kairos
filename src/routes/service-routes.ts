@@ -6,7 +6,6 @@ export const serviceRouter = express.Router();
 serviceRouter.get('/', async (_req, res) => {
   const services = await listServices();
   res.status(200).json({
-    status: 'success',
     data: services,
   });
 });

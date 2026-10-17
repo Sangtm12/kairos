@@ -1,6 +1,7 @@
 import express from 'express';
 import { pingDatabase } from './db/health-check.js';
 import { serviceRouter } from './routes/service-routes.js';
+import { errorMiddleware } from './middlewares/error-middleware.js';
 
 export const app = express();
 
@@ -23,3 +24,5 @@ app.get('/health', async (_req, res) => {
     });
   }
 });
+
+app.use(errorMiddleware);
