@@ -41,7 +41,8 @@ Migrations for `users`, `provider_profiles`, `services`. Real constraints: `NOT 
 foreign keys with deliberate `ON DELETE` behaviour, `CHECK (price_minor >= 0)`, enum types for role.
 
 Decide and record in `docs/notes/schema-decisions.md`:
-- **UUID vs bigserial for PKs?** (UUIDs don't leak row counts and let clients generate IDs; they're
+- **UUID vs bigserial for PKs?** *Decided: UUIDv7 via `DEFAULT uuidv7()` (Postgres 18) — record the
+  reasoning.* (UUIDs don't leak row counts and let clients generate IDs; they're
   wider and randomly ordered, which fragments B-tree inserts. UUIDv7 is time-sortable and fixes most
   of that — strongly preferred here.)
 - **`timestamptz` vs `timestamp`?** (`timestamptz` — always. `timestamp` silently discards the offset,

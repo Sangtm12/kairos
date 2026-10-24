@@ -36,7 +36,7 @@ M5 when the money types stop protecting you.
 
 ### KAI-002 · CHORE · 1h — Postgres in Docker
 
-`docker-compose.yml` with Postgres 17, a named volume, a healthcheck. Connect from Node with `pg` and
+`docker-compose.yml` with Postgres 18 (originally 17; bumped during KAI-010 for native `uuidv7()`), a named volume, a healthcheck. Connect from Node with `pg` and
 log the result of `SELECT NOW()`.
 
 **Why this exists.** Containerizing the database on day one means your machine stays clean, your
