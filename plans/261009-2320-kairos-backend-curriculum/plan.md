@@ -26,8 +26,8 @@ reading ahead — the diagnosis is the lesson.
 
 | # | Milestone | Hrs | The question it answers | Status |
 |---|---|---|---|---|
-| [M0](milestone-00-foundations.md) | Foundations | 10 | What actually happens between `curl` and a response? | ⬜ |
-| [M1](milestone-01-data-and-sql.md) | Data & SQL | 12 | Raw SQL first — then what does Prisma actually do for me? | ⬜ |
+| [M0](milestone-00-foundations.md) | Foundations | 10 | What actually happens between `curl` and a response? | 🟡 code done · closing notes pending (KAI-003 http-basics) |
+| [M1](milestone-01-data-and-sql.md) | Data & SQL | 12 | Raw SQL first — then what does Prisma actually do for me? | 🟡 KAI-010 (migrations notes pending) |
 | [M2](milestone-02-auth.md) | Identity & access | 10 | How do I know who you are, and what you may touch? | ⬜ |
 | [M3](milestone-03-availability-engine.md) | Availability engine | 20 | When is this person actually free? | ⬜ |
 | [M4](milestone-04-booking-concurrency.md) | Booking & concurrency | 13 | What happens when two people click at once? | ⬜ |
@@ -88,5 +88,10 @@ pattern-matching, not learning, and the next milestone should be harder.
 
 | Date | Hrs | Closed | What surprised me |
 |---|---|---|---|
+|12/10 |  | KAI-001 | |
 |14/10 |  | KAI-002 | - compose: `.env` interpolated on host before containers exist; `env_file` vars go to the container process only — never available to `${VAR}`<br/>- Server listens only after first DB query succeeds — readiness before accepting traffic|
-|17/10 |  | KAI-005 | - routes (= the controller role) => services => repositories <br/>- explicit return types on exported fns = layer contract. Infer module internals |
+|15/10 |  | KAI-004 | |
+|17/10 |  | KAI-005, KAI-006 | - routes (= the controller role) => services => repositories <br/>- explicit return types on exported fns = layer contract. Infer module internals |
+|18/10 |  | KAI-007 | - `req.headers` keys arrive lowercased<br/>- `process.hrtime.bigint()` must become a number before dividing by 1e6 (ns → ms)<br/>- what's wrong with this logger (→ M8): unstructured, synchronous, no levels, no redaction, inbound X-Request-Id not validated |
+|21/10 |  | KAI-008 | |
+|24/10 |  | KAI-010 (partial) | |
