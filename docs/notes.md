@@ -38,5 +38,9 @@
 
 # 011 - core schema
 - down migrations should be applied in a reversed order compared to up migrations
-- uuid vs BIGINT for id
-- citext vs LOWER() index
+- uuid vs BIGINT for id. UUID so that app will not reveal internal info.
+- citext vs LOWER() index. CITEXT because we dont want to wrap LOWER() in every query
+- ON DELETE NO ACTION: same as RESTRICT, but allows deferring until the transaction commits, which may resolve the conflict eventually.
+- soft delete because we want to keep booking history when provider deletes account. 
+- use partial unique index on tables with soft delete.
+- indexes are dropped along with their table

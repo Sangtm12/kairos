@@ -26,8 +26,8 @@ reading ahead — the diagnosis is the lesson.
 
 | # | Milestone | Hrs | The question it answers | Status |
 |---|---|---|---|---|
-| [M0](milestone-00-foundations.md) | Foundations | 10 | What actually happens between `curl` and a response? | 🟡 code done · closing notes pending (KAI-003 http-basics) |
-| [M1](milestone-01-data-and-sql.md) | Data & SQL | 12 | Raw SQL first — then what does Prisma actually do for me? | 🟡 KAI-010 (migrations notes pending) |
+| [M0](milestone-00-foundations.md) | Foundations | 10 | What actually happens between `curl` and a response? | ✅ done |
+| [M1](milestone-01-data-and-sql.md) | Data & SQL | 12 | Raw SQL first — then what does Prisma actually do for me? | 🟡 KAI-010 ✅ · KAI-011 in progress (migration written, not applied; decisions doc pending) |
 | [M2](milestone-02-auth.md) | Identity & access | 10 | How do I know who you are, and what you may touch? | ⬜ |
 | [M3](milestone-03-availability-engine.md) | Availability engine | 20 | When is this person actually free? | ⬜ |
 | [M4](milestone-04-booking-concurrency.md) | Booking & concurrency | 13 | What happens when two people click at once? | ⬜ |
