@@ -35,3 +35,8 @@
 - forward-only: once a migration has run anywhere shared, never edit it — write a new one. Editing means each DB has a different schema history and they silently diverge
 - `down` is often a lie in production: dropping a column/table destroys data that `up` can't bring back, and other code may already depend on the new shape. Real rollback = a new forward migration
 - never `ALTER TABLE` by hand in `psql` — the migration history stops describing the real schema
+
+# 011 - core schema
+- down migrations should be applied in a reversed order compared to up migrations
+- uuid vs BIGINT for id
+- citext vs LOWER() index
