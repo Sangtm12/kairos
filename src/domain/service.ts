@@ -6,4 +6,6 @@ export type Service = {
   priceMinor: number;
   bufferBeforeMinutes: number;
   bufferAfterMinutes: number;
+  createdAt: Date;
+  updatedAt: Date;
 };
