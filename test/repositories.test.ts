@@ -93,6 +93,54 @@ describe('serviceRepository.findAll', () => {
   });
 });
 
+describe('serviceRepository.update', () => {
+  beforeEach(() => vi.resetAllMocks());
+
+  it('updates only provided fields and maps the returned row', async () => {
+    queryMock().mockResolvedValue({
+      rows: [
+        {
+          id: 'svc-1',
+          provider_id: 'prov-1',
+          title: 'Updated haircut',
+          duration_minutes: 45,
+          price_minor: '250000',
+          buffer_before_minutes: 15,
+          buffer_after_minutes: 5,
+          created_at: createdAt,
+          updated_at: updatedAt,
+        },
+      ],
+    });
+
+    const service = await serviceRepository.update('svc-1', { title: 'Updated haircut' });
+
+    expect(service).toEqual({
+      id: 'svc-1',
+      providerId: 'prov-1',
+      title: 'Updated haircut',
+      durationMinutes: 45,
+      priceMinor: 250000,
+      bufferBeforeMinutes: 15,
+      bufferAfterMinutes: 5,
+      createdAt,
+      updatedAt,
+    });
+    const [sql, params] = queryMock().mock.calls[0]!;
+    expect(params).toEqual(['svc-1', 'Updated haircut']);
+    expectParameterized(sql, params);
+    expect(sql).toContain('UPDATE services');
+    expect(sql).toContain('deleted_at IS NULL');
+    expect(sql).not.toContain('duration_minutes =');
+  });
+
+  it('returns null when the service does not exist', async () => {
+    queryMock().mockResolvedValue({ rows: [] });
+
+    await expect(serviceRepository.update('missing', { priceMinor: 100 })).resolves.toBeNull();
+  });
+});
+
 describe('userRepository', () => {
   beforeEach(() => vi.resetAllMocks());
 
