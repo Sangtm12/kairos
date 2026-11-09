@@ -44,3 +44,16 @@
 - soft delete because we want to keep booking history when provider deletes account. 
 - use partial unique index on tables with soft delete.
 - indexes are dropped along with their table
+
+# 014 - CRUD for services
+- check if foreign key exists before inserting in one single query by building values with a SELECT statement: 
+  INSERT INTO child_table (...)
+  SELECT p.id, $2, $3 
+  FROM parent_table p
+  WHERE p.id = $1 AND deleted_at IS NULL
+  RETURNING ...
+- use separate types for different layers, avoid having the repository layer depending on types used in the http layer
+- save zod parsed result inside res.locals.validated to pass parsed data to subsequent layers
+- query strings are always strings. Use zod coerce.
+- z.number() accepts floats. z.int() doesn't.
+- db BIGINT is returned as string
