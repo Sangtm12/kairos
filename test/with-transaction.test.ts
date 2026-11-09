@@ -45,7 +45,11 @@ describe('withTransaction', () => {
       }),
     ).rejects.toBe(failure);
 
-    expect(sentStatements()).toEqual(['BEGIN', 'INSERT INTO users (email) VALUES ($1)', 'ROLLBACK']);
+    expect(sentStatements()).toEqual([
+      'BEGIN',
+      'INSERT INTO users (email) VALUES ($1)',
+      'ROLLBACK',
+    ]);
     expect(sentStatements()).not.toContain('COMMIT');
     // Rollback succeeded, so the connection is healthy and goes back to the pool.
     expect(client.release).toHaveBeenCalledExactlyOnceWith(false);

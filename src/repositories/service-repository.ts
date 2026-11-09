@@ -1,6 +1,5 @@
 import { pool } from '../db/client.js';
-import type { Service } from '../domain/service.js';
-import type { CreateServiceBody, UpdateServiceBody } from '../validators/service-validator.js';
+import type { NewService, Service, ServiceChanges } from '../domain/service.js';
 
 type ServiceRow = {
   id: string;
@@ -26,7 +25,7 @@ const mapServiceRow = (row: ServiceRow): Service => ({
   updatedAt: row.updated_at,
 });
 
-export const findAll = async (perPage: number = 10, page: number = 1): Promise<Service[]> => {
+export const findAll = async (page: number = 1, perPage: number = 10): Promise<Service[]> => {
   const { rows } = await pool.query<ServiceRow>(
     `
     SELECT id, provider_id, title, duration_minutes, price_minor, buffer_before_minutes, buffer_after_minutes, created_at, updated_at
@@ -55,11 +54,14 @@ export const findById = async (serviceId: string): Promise<Service | null> => {
   return rows[0] ? mapServiceRow(rows[0]) : null;
 };
 
-export const insert = async (service: CreateServiceBody): Promise<Service> => {
+export const insert = async (service: NewService): Promise<Service | null> => {
   const { rows } = await pool.query<ServiceRow>(
     `
     INSERT INTO services (provider_id, title, duration_minutes, price_minor, buffer_before_minutes, buffer_after_minutes)
-    VALUES ($1, $2, $3, $4, $5, $6)
+    SELECT p.id, $2, $3, $4, $5, $6
+    FROM provider_profiles p
+    WHERE p.id = $1
+    AND p.deleted_at IS NULL
     RETURNING id, provider_id, title, duration_minutes, price_minor, buffer_before_minutes, buffer_after_minutes, created_at, updated_at
     `,
     [
@@ -72,14 +74,14 @@ export const insert = async (service: CreateServiceBody): Promise<Service> => {
     ],
   );
 
-  return mapServiceRow(rows[0]!);
+  return rows[0] ? mapServiceRow(rows[0]) : null;
 };
 
 export const update = async (
   serviceId: string,
-  service: UpdateServiceBody,
+  service: ServiceChanges,
 ): Promise<Service | null> => {
-  const fields: [keyof UpdateServiceBody, string][] = [
+  const fields: [keyof ServiceChanges, string][] = [
     ['title', 'title'],
     ['durationMinutes', 'duration_minutes'],
     ['priceMinor', 'price_minor'],
@@ -113,8 +115,10 @@ export const update = async (
 export const remove = async (serviceId: string): Promise<Service | null> => {
   const { rows } = await pool.query<ServiceRow>(
     `
-    DELETE FROM services
+    UPDATE services
+    SET deleted_at = NOW()
     WHERE id = $1
+    AND deleted_at IS NULL
     RETURNING id, provider_id, title, duration_minutes, price_minor, buffer_before_minutes, buffer_after_minutes, created_at, updated_at  
   `,
     [serviceId],

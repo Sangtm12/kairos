@@ -48,12 +48,26 @@ describe('PATCH /services/:serviceId', () => {
   });
 
   it('rejects invalid service IDs and empty patches before updating', async () => {
-    const invalidIdResponse = await request(app).patch('/services/not-a-uuid').send({ title: 'Valid' });
+    const invalidIdResponse = await request(app)
+      .patch('/services/not-a-uuid')
+      .send({ title: 'Valid' });
     const emptyBodyResponse = await request(app).patch(`/services/${serviceId}`).send({});
 
     expect(invalidIdResponse.status).toBe(422);
     expect(emptyBodyResponse.status).toBe(422);
     expect(update).not.toHaveBeenCalled();
+  });
+
+  it('reports field errors as { field: message } and object-level errors as the message', async () => {
+    const emptyBody = await request(app).patch(`/services/${serviceId}`).send({});
+    const floatPrice = await request(app)
+      .patch(`/services/${serviceId}`)
+      .send({ priceMinor: 10.5 });
+
+    expect(emptyBody.body.error.message).toBe('At least one service field must be provided');
+    expect(emptyBody.body.error.details).toEqual({});
+    expect(floatPrice.status).toBe(422);
+    expect(floatPrice.body.error.details).toEqual({ priceMinor: expect.any(String) });
   });
 
   it('returns 404 if the service does not exist', async () => {

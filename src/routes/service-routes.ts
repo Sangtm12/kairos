@@ -1,22 +1,21 @@
 import type { Request, Response } from 'express';
 import express from 'express';
-import { validateRequest } from '../middlewares/validateRequest.js';
-import { findById } from '../repositories/service-repository.js';
+import { validateRequest } from '../middlewares/validate-request.js';
 import {
   createService,
   deleteService,
+  getServiceById,
   listServices,
   updateService,
 } from '../services/service-service.js';
 import {
   CreateServiceSchema,
-  DeleteServiceSchema,
   GetAllServicesSchema,
-  GetServiceByIdSchema,
+  ServiceIdParamsSchema,
   UpdateServiceSchema,
   type CreateServiceBody,
-  type DeleteServiceParams,
-  type GetServiceByIdQueryParams,
+  type GetAllServicesQuery,
+  type ServiceIdParams,
   type UpdateServiceBody,
 } from '../validators/service-validator.js';
 
@@ -24,9 +23,10 @@ export const serviceRouter = express.Router();
 
 serviceRouter.get(
   '/',
-  validateRequest(GetAllServicesSchema),
-  async (_req: Request, res: Response) => {
-    const services = await listServices();
+  validateRequest(GetAllServicesSchema, 'query'),
+  async (_req: Request, res: Response<unknown, { validated: GetAllServicesQuery }>) => {
+    const { page, perPage } = res.locals.validated;
+    const services = await listServices(page, perPage);
     res.status(200).json({
       data: services,
     });
@@ -35,10 +35,9 @@ serviceRouter.get(
 
 serviceRouter.get(
   '/:serviceId',
-  validateRequest(GetServiceByIdSchema, 'params'),
-  async (_req: Request, res: Response<unknown, { validated: GetServiceByIdQueryParams }>) => {
-    const { serviceId } = res.locals.validated;
-    const service = await findById(serviceId);
+  validateRequest(ServiceIdParamsSchema, 'params'),
+  async (_req: Request, res: Response<unknown, { validated: ServiceIdParams }>) => {
+    const service = await getServiceById(res.locals.validated.serviceId);
     res.status(200).json({
       data: service,
     });
@@ -48,7 +47,7 @@ serviceRouter.get(
 serviceRouter.post(
   '/',
   validateRequest(CreateServiceSchema),
-  async (_req, res: Response<unknown, { validated: CreateServiceBody }>) => {
+  async (_req: Request, res: Response<unknown, { validated: CreateServiceBody }>) => {
     const service = await createService(res.locals.validated);
     res.status(201).json({
       data: service,
@@ -58,14 +57,11 @@ serviceRouter.post(
 
 serviceRouter.patch(
   '/:serviceId',
-  validateRequest(GetServiceByIdSchema, 'params', 'validatedParams'),
+  validateRequest(ServiceIdParamsSchema, 'params', 'validatedParams'),
   validateRequest(UpdateServiceSchema),
   async (
     _req: Request,
-    res: Response<
-      unknown,
-      { validatedParams: GetServiceByIdQueryParams; validated: UpdateServiceBody }
-    >,
+    res: Response<unknown, { validatedParams: ServiceIdParams; validated: UpdateServiceBody }>,
   ) => {
     const service = await updateService(res.locals.validatedParams.serviceId, res.locals.validated);
     res.status(200).json({
@@ -76,8 +72,8 @@ serviceRouter.patch(
 
 serviceRouter.delete(
   '/:serviceId',
-  validateRequest(DeleteServiceSchema, 'params'),
-  async (req: Request, res: Response<unknown, { validated: DeleteServiceParams }>) => {
+  validateRequest(ServiceIdParamsSchema, 'params'),
+  async (_req: Request, res: Response<unknown, { validated: ServiceIdParams }>) => {
     const service = await deleteService(res.locals.validated.serviceId);
     res.status(200).json({
       data: service,

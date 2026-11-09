@@ -76,7 +76,7 @@ describe('serviceRepository.findAll', () => {
   it('passes LIMIT/OFFSET as parameters and excludes soft-deleted rows', async () => {
     queryMock().mockResolvedValue({ rows: [] });
 
-    await serviceRepository.findAll(20, 3);
+    await serviceRepository.findAll(3, 20);
 
     const [sql, params] = queryMock().mock.calls[0]!;
     expect(params).toEqual([20, 40]);
@@ -141,6 +141,51 @@ describe('serviceRepository.update', () => {
   });
 });
 
+describe('serviceRepository.insert', () => {
+  beforeEach(() => vi.resetAllMocks());
+
+  const input = {
+    providerId: 'prov-1',
+    title: 'Haircut',
+    durationMinutes: 45,
+    priceMinor: 200000,
+  };
+
+  it('inserts only for a live provider and defaults buffers to 0', async () => {
+    queryMock().mockResolvedValue({ rows: [] });
+
+    await serviceRepository.insert(input);
+
+    const [sql, params] = queryMock().mock.calls[0]!;
+    expect(params).toEqual(['prov-1', 'Haircut', 45, 200000, 0, 0]);
+    expectParameterized(sql, params);
+    expect(sql).toContain('FROM provider_profiles');
+    expect(sql).toContain('deleted_at IS NULL');
+  });
+
+  it('returns null when the provider is missing or soft-deleted', async () => {
+    queryMock().mockResolvedValue({ rows: [] });
+
+    await expect(serviceRepository.insert(input)).resolves.toBeNull();
+  });
+});
+
+describe('serviceRepository.remove', () => {
+  beforeEach(() => vi.resetAllMocks());
+
+  it('soft-deletes only rows that are not already deleted', async () => {
+    queryMock().mockResolvedValue({ rows: [] });
+
+    await expect(serviceRepository.remove('svc-1')).resolves.toBeNull();
+
+    const [sql, params] = queryMock().mock.calls[0]!;
+    expect(params).toEqual(['svc-1']);
+    expect(sql).toContain('SET deleted_at = NOW()');
+    expect(sql).toContain('deleted_at IS NULL');
+    expect(sql).not.toContain('DELETE FROM');
+  });
+});
+
 describe('userRepository', () => {
   beforeEach(() => vi.resetAllMocks());
 
@@ -176,7 +221,11 @@ describe('userRepository', () => {
   it('create runs on the client it is given, so it can join a transaction', async () => {
     const txClient = { query: vi.fn().mockResolvedValue({ rows: [userRow] }) };
 
-    const user = await userRepository.create('jane@example.com', 'hash', txClient as unknown as Pool);
+    const user = await userRepository.create(
+      'jane@example.com',
+      'hash',
+      txClient as unknown as Pool,
+    );
 
     expect(user).toEqual(expectedUser);
     expect(pool.query).not.toHaveBeenCalled();

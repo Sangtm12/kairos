@@ -4,10 +4,10 @@ export type User = {
   createdAt: Date;
   updatedAt: Date;
   role: UserRoleEnum;
-}
+};
 
 export type UserWithPasswordHash = User & {
   passwordHash: string;
-}
+};
 
 export type UserRoleEnum = 'customer' | 'provider';

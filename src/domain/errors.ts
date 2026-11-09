@@ -1,4 +1,10 @@
-type ErrorCode = 'NOT_FOUND_ERROR' | 'VALIDATION_ERROR' | 'BAD_REQUEST_ERROR' | 'CONFLICT_ERROR' | 'UNAUTHORIZED_ERROR' | 'FORBIDDEN_ERROR';
+type ErrorCode =
+  | 'NOT_FOUND_ERROR'
+  | 'VALIDATION_ERROR'
+  | 'BAD_REQUEST_ERROR'
+  | 'CONFLICT_ERROR'
+  | 'UNAUTHORIZED_ERROR'
+  | 'FORBIDDEN_ERROR';
 
 export class AppError extends Error {
   statusCode: number;
