@@ -124,11 +124,16 @@ apart. And note *where* validation sits: at the boundary, before anything reache
 layer behind it can then assume well-formed input, which is what makes the inner layers simple.
 
 **Done when:**
-- [ ] Create, read (one + list), update, delete all work
-- [ ] Invalid payloads return 422 with per-field details
-- [ ] Unknown fields are stripped or rejected (`.strict()`) — decide and be deliberate
-- [ ] `price_minor` is validated as a positive integer; a float is rejected
-- [ ] Types are inferred from schemas, never written twice
+- [x] Create, read (one + list), update, delete all work — delete is a soft delete (`deleted_at`)
+- [x] Invalid payloads return 422 with per-field details (`{ field: message }`)
+- [x] Unknown fields are stripped or rejected (`.strict()`) — decided: rejected (`z.strictObject`)
+- [x] `price_minor` is validated as an integer (`z.int()`), so a float is rejected — `0` is allowed
+      (matches the DB `CHECK (price_minor >= 0)`)
+- [x] Types are inferred from schemas, never written twice — HTTP types via `z.infer`; domain types
+      (`NewService`, `ServiceChanges`) are kept separate on purpose so services don't depend on HTTP
+
+**Status (09/11):** ✅ done. Typecheck clean, 39/39 tests pass. Follow-up: there are no tests yet for
+an unknown field → 422 or a float `priceMinor` → 422.
 
 **The trap:** validating in the service layer too, "to be safe". Pick one boundary and trust it, or
 you'll maintain two drifting copies of every rule.

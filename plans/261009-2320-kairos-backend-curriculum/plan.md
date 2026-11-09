@@ -27,7 +27,7 @@ reading ahead — the diagnosis is the lesson.
 | # | Milestone | Hrs | The question it answers | Status |
 |---|---|---|---|---|
 | [M0](milestone-00-foundations.md) | Foundations | 10 | What actually happens between `curl` and a response? | ✅ done |
-| [M1](milestone-01-data-and-sql.md) | Data & SQL | 12 | Raw SQL first — then what does Prisma actually do for me? | 🟡 KAI-010 ✅ · KAI-011 in progress (migration written, not applied; decisions doc pending) |
+| [M1](milestone-01-data-and-sql.md) | Data & SQL | 12 | Raw SQL first — then what does Prisma actually do for me? | 🟡 KAI-010 ✅ · KAI-011 ✅ · KAI-012 ✅ · KAI-013 ⬜ · KAI-014 ✅ · next: KAI-015 |
 | [M2](milestone-02-auth.md) | Identity & access | 10 | How do I know who you are, and what you may touch? | ⬜ |
 | [M3](milestone-03-availability-engine.md) | Availability engine | 20 | When is this person actually free? | ⬜ |
 | [M4](milestone-04-booking-concurrency.md) | Booking & concurrency | 13 | What happens when two people click at once? | ⬜ |
@@ -95,3 +95,7 @@ pattern-matching, not learning, and the next milestone should be harder.
 |18/10 |  | KAI-007 | - `req.headers` keys arrive lowercased<br/>- `process.hrtime.bigint()` must become a number before dividing by 1e6 (ns → ms)<br/>- what's wrong with this logger (→ M8): unstructured, synchronous, no levels, no redaction, inbound X-Request-Id not validated |
 |21/10 |  | KAI-008 | |
 |24/10 |  | KAI-010 (partial) | |
+|02/11 |  | KAI-011 | |
+|05/11 |  | KAI-012 | |
+|08/11 |  | KAI-014 | |
+|09/11 |  | KAI-014 (review fixes) | |
