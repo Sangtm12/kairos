@@ -17,7 +17,8 @@
     "test:watch": "vitest",
     "migrate:up": "node --env-file=.env ./node_modules/node-pg-migrate/bin/node-pg-migrate up",
     "migrate:down": "node --env-file=.env ./node_modules/node-pg-migrate/bin/node-pg-migrate down",
-    "migrate:create": "node --env-file=.env ./node_modules/node-pg-migrate/bin/node-pg-migrate create"
+    "migrate:create": "node --env-file=.env ./node_modules/node-pg-migrate/bin/node-pg-migrate create",
+    "seed:services": "tsx --env-file=.env scripts/seed-service.ts"
   },
   "dependencies": {
     "express": "^5.3.0",

@@ -57,3 +57,11 @@
 - query strings are always strings. Use zod coerce.
 - z.number() accepts floats. z.int() doesn't.
 - db BIGINT is returned as string
+
+# 015 - seed, index
+- unnest() takes an array and construct a column of rows containing values from the array. With several arrays, it zips them together. Used when seeding 100k rows * 9 columns (way past postgres allowed parameterized values) to pass in 9 arrays as parameterized values instead.
+- composite index is created on 2 or more columns, used for:
+    + multi-column filtering (A = x AND B = y). Adding B pays off when A alone still matches many rows; if A is already selective, an index on A alone is nearly as good
+    + filter + sort: indexes are already sorted if sort column comes right after filter with =
+  Doesn't work with queries where a column on the left is skipped
+
